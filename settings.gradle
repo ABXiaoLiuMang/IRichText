@@ -1,3 +1,4 @@
+include ':xhtml'
 include ':richtext'
 include ':app'
 rootProject.name = "IRichText"

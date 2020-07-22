@@ -17,52 +17,6 @@ import java.io.InputStream;
  */
 abstract class SourceDecode<T> {
 
-    static SourceDecode<byte[]> BASE64_SOURCE_DECODE = new SourceDecode<byte[]>() {
-
-        @Override
-        void decodeSize(byte[] bytes, BitmapFactory.Options options) {
-            BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
-        }
-
-        @Override
-        public ImageWrapper decodeAsBitmap(byte[] bytes, BitmapFactory.Options options) {
-            return ImageWrapper.createAsBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options));
-        }
-
-        @Override
-        ImageWrapper decodeAsGif(byte[] bytes, BitmapFactory.Options options) {
-            return ImageWrapper.createAsGif(new GifDrawable(Movie.decodeByteArray(bytes, 0, bytes.length), options.outHeight, options.outWidth));
-        }
-
-        @Override
-        boolean isGif(byte[] bytes, BitmapFactory.Options options) {
-            return ImageKit.isGif(bytes);
-        }
-    };
-
-    static SourceDecode<String> LOCAL_FILE_SOURCE_DECODE = new SourceDecode<String>() {
-
-        @Override
-        void decodeSize(String s, BitmapFactory.Options options) {
-            BitmapFactory.decodeFile(s, options);
-        }
-
-        @Override
-        public ImageWrapper decodeAsBitmap(String s, BitmapFactory.Options options) {
-            return ImageWrapper.createAsBitmap(BitmapFactory.decodeFile(s, options));
-        }
-
-        @Override
-        ImageWrapper decodeAsGif(String s, BitmapFactory.Options options) {
-            return ImageWrapper.createAsGif(new GifDrawable(Movie.decodeFile(s), options.outHeight, options.outWidth));
-        }
-
-        @Override
-        boolean isGif(String s, BitmapFactory.Options options) {
-            return ImageKit.isGif(s);
-        }
-    };
-
     static SourceDecode<InputStream> REMOTE_SOURCE_DECODE = new SourceDecode<InputStream>() {
 
         private static final int MARK_POSITION = 1024 * 1024;

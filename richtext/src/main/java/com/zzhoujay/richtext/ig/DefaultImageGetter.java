@@ -47,7 +47,7 @@ public class DefaultImageGetter implements ImageGetter, ImageLoadNotify {
     private static ExecutorService executorService;
 
 
-        static SSLContext sslContext = null;
+    static SSLContext sslContext = null;
 
     static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
         @Override
@@ -117,7 +117,6 @@ public class DefaultImageGetter implements ImageGetter, ImageLoadNotify {
 
     private void checkTarget(TextView textView) {
         synchronized (lock) {
-            //noinspection unchecked
             HashSet<Cancelable> cs = (HashSet<Cancelable>) textView.getTag(TASK_TAG);
             if (cs != null) {
                 if (cs == tasks) {
@@ -163,6 +162,7 @@ public class DefaultImageGetter implements ImageGetter, ImageLoadNotify {
         }
 
         // 网络图片
+//        Request builder = new Request.Builder().url("https://cdn.pixabay.com/photo/2020/07/15/11/10/sky-5407339__340.jpg").get().build();
         Request builder = new Request.Builder().url(holder.getSource()).get().build();
         Call call = getClient().newCall(builder);
         CallbackImageLoader callback = new CallbackImageLoader(holder, config, textView, drawableWrapper, this, rect);

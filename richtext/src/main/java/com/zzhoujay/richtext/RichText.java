@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
  * Created by zhou on 16-5-28.
  * 富文本生成器
  */
-@SuppressWarnings("unused")
 public class RichText implements ImageGetterWrapper, ImageLoadNotify {
 
     public static boolean debugMode = false;

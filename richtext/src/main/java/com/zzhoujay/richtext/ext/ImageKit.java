@@ -1,8 +1,5 @@
 package com.zzhoujay.richtext.ext;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -23,36 +20,6 @@ public class ImageKit {
                 inputStream.read(bs, 0, bs.length);
                 inputStream.reset();
                 return GIF_FILE_HEAD.equals(bytesToHexString(bs));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    public static boolean isGif(byte[] bytes) {
-        byte[] bs = new byte[4];
-        System.arraycopy(bytes, 0, bs, 0, 4);
-        return GIF_FILE_HEAD.equals(bytesToHexString(bs));
-    }
-
-    public static boolean isGif(String path) {
-        FileInputStream fileInputStream = null;
-        BufferedInputStream bufferedInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(path);
-            bufferedInputStream = new BufferedInputStream(fileInputStream);
-            return isGif(bufferedInputStream);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (bufferedInputStream != null) {
-                    bufferedInputStream.close();
-                }
-                if (fileInputStream != null) {
-                    fileInputStream.close();
-                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
