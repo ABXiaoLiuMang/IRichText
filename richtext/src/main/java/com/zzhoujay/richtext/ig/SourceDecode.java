@@ -14,7 +14,6 @@ import java.io.InputStream;
 
 /**
  * Created by zhou on 2017/2/21.
- * 图片解析工具
  */
 abstract class SourceDecode<T> {
 
@@ -64,7 +63,7 @@ abstract class SourceDecode<T> {
         }
     };
 
-    static SourceDecode<InputStream> INPUT_STREAM_DECODE = new SourceDecode<InputStream>() {
+    static SourceDecode<InputStream> REMOTE_SOURCE_DECODE = new SourceDecode<InputStream>() {
 
         private static final int MARK_POSITION = 1024 * 1024;
 
@@ -123,8 +122,8 @@ abstract class SourceDecode<T> {
     };
 
     ImageWrapper decode(ImageHolder holder, T t, BitmapFactory.Options options) {
-        if (holder.isAutoPlay() && (holder.isGif() || isGif(t, options))) {
-            holder.setIsGif(true);
+        if (holder.isAutoPlay() && isGif(t, options)) {
+            holder.setImageType(ImageHolder.ImageType.GIF);
             return decodeAsGif(t, options);
         } else {
             return decodeAsBitmap(t, options);

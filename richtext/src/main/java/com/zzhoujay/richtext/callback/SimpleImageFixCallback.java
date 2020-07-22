@@ -4,7 +4,6 @@ import com.zzhoujay.richtext.ImageHolder;
 
 /**
  * Created by zhou on 2017/2/21.
- * SimpleImageFixCallback
  */
 
 public abstract class SimpleImageFixCallback implements ImageFixCallback {
@@ -20,7 +19,7 @@ public abstract class SimpleImageFixCallback implements ImageFixCallback {
     }
 
     @Override
-    public void onSizeReady(ImageHolder holder, int imageWidth, int imageHeight, ImageHolder.SizeHolder sizeHolder) {
+    public void onSizeReady(ImageHolder holder, int width, int height) {
 
     }
 

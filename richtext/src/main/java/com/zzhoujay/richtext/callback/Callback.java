@@ -2,7 +2,6 @@ package com.zzhoujay.richtext.callback;
 
 /**
  * Created by zhou on 2017/3/11.
- * 解析完成回调接口
  */
 
 public interface Callback {

@@ -24,7 +24,7 @@ public class GifActivity extends AppCompatActivity {
 
         textView = (TextView) findViewById(R.id.text);
         textView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        RichText.from(GIF_TEST).autoFix(false).showBorder(true).autoPlay(true).into(textView);
+        RichText.from(GIF_TEST).autoFix(false).into(textView);
     }
 
 }

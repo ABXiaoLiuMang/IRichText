@@ -40,7 +40,6 @@ public class DebugActivity extends Activity {
 
 
         RichText.from(test_text_2)
-                .showBorder(true)
                 .fix(new SimpleImageFixCallback() {
 
                     @Override

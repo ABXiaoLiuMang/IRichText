@@ -21,7 +21,6 @@ public class LongClickableURLSpan extends URLSpan implements LongClickableSpan {
     private final OnUrlLongClickListener onUrlLongClickListener;
     private final LinkHolder linkHolder;
 
-    @SuppressWarnings("unused")
     public LongClickableURLSpan(LinkHolder linkHolder) {
         this(linkHolder, null, null);
     }
@@ -50,10 +49,6 @@ public class LongClickableURLSpan extends URLSpan implements LongClickableSpan {
     @Override
     public boolean onLongClick(View widget) {
         return onUrlLongClickListener != null && onUrlLongClickListener.urlLongClick(getURL());
-    }
-
-    public LongClickableURLSpan copy() {
-        return new LongClickableURLSpan(linkHolder, null, null);
     }
 
 }

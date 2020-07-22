@@ -7,12 +7,11 @@ import android.graphics.drawable.Drawable;
 
 import com.zzhoujay.richtext.callback.Recyclable;
 import com.zzhoujay.richtext.drawable.GifDrawable;
-import com.zzhoujay.richtext.exceptions.ImageWrapperMultiSourceException;
 
 /**
  * Created by zhou on 2017/2/21.
- * 抽象的图片类，包含Bitmap静态图的Gif动态图
  */
+
 class ImageWrapper implements Recyclable {
 
     private final GifDrawable gifDrawable;
@@ -25,14 +24,14 @@ class ImageWrapper implements Recyclable {
         this.bitmap = bitmap;
         if (gifDrawable == null) {
             if (bitmap == null) {
-                throw new ImageWrapperMultiSourceException();
+                throw new NullPointerException();
             } else {
                 height = bitmap.getHeight();
                 width = bitmap.getWidth();
             }
         } else {
             if (bitmap != null) {
-                throw new ImageWrapperMultiSourceException();
+                throw new NullPointerException();
             } else {
                 height = gifDrawable.getHeight();
                 width = gifDrawable.getWidth();
@@ -63,9 +62,7 @@ class ImageWrapper implements Recyclable {
 
     Drawable getDrawable(Resources resources) {
         if (gifDrawable == null) {
-            BitmapDrawable bitmapDrawable = new BitmapDrawable(resources, bitmap);
-            bitmapDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
-            return bitmapDrawable;
+            return new BitmapDrawable(resources, bitmap);
         } else {
             return gifDrawable;
         }

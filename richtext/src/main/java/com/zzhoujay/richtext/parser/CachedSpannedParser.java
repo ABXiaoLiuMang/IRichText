@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 /**
  * Created by zhou on 2016/12/5.
- * CachedSpannedParser
  */
 
 public class CachedSpannedParser {
@@ -136,7 +135,6 @@ public class CachedSpannedParser {
         return cs != null && cs.length > 0;
     }
 
-    @SuppressWarnings("unused")
     private void clearCachedMark(SpannableStringBuilder ssb) {
         Cached[] cs = ssb.getSpans(0, ssb.length(), Cached.class);
         if (cs != null && cs.length > 0) {

@@ -4,7 +4,6 @@ import java.util.concurrent.Future;
 
 /**
  * Created by zhou on 2017/2/21.
- * FutureCancelableWrapper
  */
 class FutureCancelableWrapper implements Cancelable {
 

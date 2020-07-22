@@ -83,7 +83,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
             public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
                 if (holder instanceof Holder) {
                     Holder h = (Holder) holder;
-                    RichText.from(testString1[position]).singleLoad(false).into(h.text);
+                    RichText.from(testString1[position]).into(h.text);
                 }
             }
 
