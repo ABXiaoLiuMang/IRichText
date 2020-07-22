@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.core.util.Pair;
 
 import com.zzhoujay.richtext.callback.Callback;
@@ -20,7 +19,6 @@ import com.zzhoujay.richtext.callback.OnImageClickListener;
 import com.zzhoujay.richtext.callback.OnImageLongClickListener;
 import com.zzhoujay.richtext.callback.OnUrlClickListener;
 import com.zzhoujay.richtext.callback.OnUrlLongClickListener;
-import com.zzhoujay.richtext.ig.DefaultImageGetter;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
