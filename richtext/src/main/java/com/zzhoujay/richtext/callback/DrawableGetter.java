@@ -18,7 +18,6 @@ public interface DrawableGetter {
      *
      * @param holder   ImageHolder
      * @param config   RichTextConfig
-     * @param textView TextView
      * @return Drawable
      * @see ImageHolder
      * @see RichTextConfig

@@ -26,21 +26,16 @@ public class Html2SpannedParser implements SpannedParser {
         Z_FROM_HTML_METHOD = fromHtml;
     }
 
-    private Html.TagHandler tagHandler;
-
-    public Html2SpannedParser(Html.TagHandler tagHandler) {
-        this.tagHandler = tagHandler;
-    }
 
     @Override
     public Spanned parse(String source) {
         if (Z_FROM_HTML_METHOD != null) {
             try {
-                return (Spanned) Z_FROM_HTML_METHOD.invoke(null, source, null, tagHandler);
+                return (Spanned) Z_FROM_HTML_METHOD.invoke(null, source, null, null);
             } catch (Exception e) {
                 Log.d(TAG, "Z_FROM_HTML_METHOD invoke failure", e);
             }
         }
-        return Html.fromHtml(source, null, tagHandler);
+        return Html.fromHtml(source, null, null);
     }
 }

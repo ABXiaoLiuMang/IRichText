@@ -6,12 +6,11 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.IntDef;
 
-import com.zzhoujay.richtext.drawable.DrawableBorderHolder;
-import com.zzhoujay.richtext.exceptions.ResetImageSourceException;
 import com.zzhoujay.richtext.ext.MD5;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Objects;
 
 /**
  * Created by zhou on 16-5-28.
@@ -27,9 +26,6 @@ public class ImageHolder {
     /**
      * ScaleType
      */
-//    @IntDef({ScaleType.NONE, ScaleType.CENTER, ScaleType.CENTER_CROP, ScaleType.CENTER_INSIDE, ScaleType.FIT_START,
-//            ScaleType.FIT_END, ScaleType.FIT_CENTER, ScaleType.FIT_XY, ScaleType.FIT_AUTO})
-//    @Retention(RetentionPolicy.SOURCE)
     public enum ScaleType {
         none(0), center(1), center_crop(2), center_inside(3), fit_center(4), fit_start(5), fit_end(6),
         fit_xy(7), fit_auto(8);
@@ -114,9 +110,7 @@ public class ImageHolder {
     private boolean autoPlay;
     private boolean show;
     private boolean isGif;
-    private DrawableBorderHolder borderHolder;
     private Drawable placeHolder, errorImage;
-    private String prefixCode;
     private int configHashcode;
 
     public ImageHolder(String source, int position, RichTextConfig config, TextView textView) {
@@ -124,8 +118,6 @@ public class ImageHolder {
         this.position = position;
         this.isGif = false;
         this.configHashcode = config.key();
-
-        prefixCode = config.imageDownloader == null ? "" : config.imageDownloader.getClass().getName();
 
         generateKey();
         this.autoPlay = config.autoPlay;
@@ -139,19 +131,18 @@ public class ImageHolder {
             height = config.height;
         }
         this.show = !config.noImage;
-        this.borderHolder = new DrawableBorderHolder(config.borderHolder);
 
-        this.placeHolder = config.placeHolderDrawableGetter.getDrawable(this, config, textView);
-        this.errorImage = config.errorImageDrawableGetter.getDrawable(this, config, textView);
+        this.placeHolder = config.placeHolderDrawableGetter.getDrawable(this, config,textView);
+        this.errorImage = config.errorImageDrawableGetter.getDrawable(this, config,textView);
     }
 
     private void generateKey() {
-        this.key = MD5.generate(prefixCode + configHashcode + source);
+        this.key = MD5.generate(configHashcode + source);
     }
 
     public void setSource(String source) {
         if (imageState != ImageState.INIT) {
-            throw new ResetImageSourceException();
+            throw new NullPointerException();
         }
         this.source = source;
         generateKey();
@@ -267,26 +258,6 @@ public class ImageHolder {
         return width > 0 && height > 0;
     }
 
-    public DrawableBorderHolder getBorderHolder() {
-        return borderHolder;
-    }
-
-    public void setShowBorder(boolean showBorder) {
-        this.borderHolder.setShowBorder(showBorder);
-    }
-
-    public void setBorderSize(float borderSize) {
-        this.borderHolder.setBorderSize(borderSize);
-    }
-
-    public void setBorderColor(@ColorInt int borderColor) {
-        this.borderHolder.setBorderColor(borderColor);
-    }
-
-    public void setBorderRadius(float radius) {
-        this.borderHolder.setRadius(radius);
-    }
-
     public Drawable getPlaceHolder() {
         return placeHolder;
     }
@@ -320,13 +291,11 @@ public class ImageHolder {
         if (autoPlay != that.autoPlay) return false;
         if (show != that.show) return false;
         if (isGif != that.isGif) return false;
-        if (!prefixCode.equals(that.prefixCode)) return false;
         if (!source.equals(that.source)) return false;
         if (!key.equals(that.key)) return false;
-        if (!borderHolder.equals(that.borderHolder)) return false;
-        if (placeHolder != null ? !placeHolder.equals(that.placeHolder) : that.placeHolder != null)
+        if (!Objects.equals(placeHolder, that.placeHolder))
             return false;
-        return errorImage != null ? errorImage.equals(that.errorImage) : that.errorImage == null;
+        return Objects.equals(errorImage, that.errorImage);
     }
 
     @Override
@@ -342,10 +311,8 @@ public class ImageHolder {
         result = 31 * result + (autoPlay ? 1 : 0);
         result = 31 * result + (show ? 1 : 0);
         result = 31 * result + (isGif ? 1 : 0);
-        result = 31 * result + (borderHolder != null ? borderHolder.hashCode() : 0);
         result = 31 * result + (placeHolder != null ? placeHolder.hashCode() : 0);
         result = 31 * result + (errorImage != null ? errorImage.hashCode() : 0);
-        result = 31 * result + prefixCode.hashCode();
         return result;
     }
 
@@ -363,10 +330,8 @@ public class ImageHolder {
                 ", autoPlay=" + autoPlay +
                 ", show=" + show +
                 ", isGif=" + isGif +
-                ", borderHolder=" + borderHolder +
                 ", placeHolder=" + placeHolder +
                 ", errorImage=" + errorImage +
-                ", prefixCode=" + prefixCode +
                 '}';
     }
 }

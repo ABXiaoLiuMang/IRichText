@@ -24,7 +24,6 @@ public class DebugActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
-        RichText.initCacheDir(this);
         RichText.debugMode = true;
 
         TextView textView = findViewById(R.id.test_text);
@@ -40,7 +39,6 @@ public class DebugActivity extends Activity {
 
 
         RichText.from(test_text_2)
-                .showBorder(true)
                 .fix(new SimpleImageFixCallback() {
 
                     @Override

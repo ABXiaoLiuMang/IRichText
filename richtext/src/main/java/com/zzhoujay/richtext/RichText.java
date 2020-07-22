@@ -1,6 +1,5 @@
 package com.zzhoujay.richtext;
 
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.SpannableString;
@@ -12,19 +11,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.zzhoujay.richtext.cache.BitmapPool;
 import com.zzhoujay.richtext.callback.ImageLoadNotify;
 import com.zzhoujay.richtext.ext.ContextKit;
 import com.zzhoujay.richtext.ext.Debug;
-import com.zzhoujay.richtext.ext.HtmlTagHandler;
 import com.zzhoujay.richtext.ext.LongClickableLinkMovementMethod;
 import com.zzhoujay.richtext.parser.CachedSpannedParser;
 import com.zzhoujay.richtext.parser.Html2SpannedParser;
 import com.zzhoujay.richtext.parser.ImageGetterWrapper;
-import com.zzhoujay.richtext.parser.Markdown2SpannedParser;
 import com.zzhoujay.richtext.parser.SpannedParser;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -57,46 +52,10 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
 
 
     /**
-     * 设置缓存目录，若不设置将不会对图片进行本地缓存
-     *
-     * @param cacheDir 缓存目录，请确保对该目录有读写权限
-     */
-    public static void initCacheDir(File cacheDir) {
-        BitmapPool.setCacheDir(cacheDir);
-    }
-
-    /**
      * 清除缓存
      */
     public static void recycle() {
-        BitmapPool.getPool().clear();
         RichTextPool.getPool().recycle();
-    }
-
-    /**
-     * 设置缓存目录，若不设置将不会对图片进行本地缓存
-     *
-     * @param context Context
-     */
-    public static void initCacheDir(Context context) {
-        File cacheDir;
-        cacheDir = context.getExternalCacheDir();
-        if (cacheDir == null) {
-            cacheDir = context.getCacheDir();
-        }
-        initCacheDir(cacheDir);
-    }
-
-    static void putArgs(String key, Object args) {
-        synchronized (GLOBAL_ARGS) {
-            GLOBAL_ARGS.put(key, args);
-        }
-    }
-
-    static Object getArgs(String key) {
-        synchronized (GLOBAL_ARGS) {
-            return GLOBAL_ARGS.get(key);
-        }
     }
 
     private static final String TAG_TARGET = "target";
@@ -106,8 +65,6 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     private static Pattern IMAGE_HEIGHT_PATTERN = Pattern.compile("(height|HEIGHT)=\"(.*?)\"");
     private static Pattern IMAGE_SRC_PATTERN = Pattern.compile("(src|SRC)=\"(.*?)\"");
 
-
-    private static final HashMap<String, Object> GLOBAL_ARGS = new HashMap<>();
 
     private HashMap<String, ImageHolder> imageHolderMap;
 
@@ -123,11 +80,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     RichText(RichTextConfig config, TextView textView) {
         this.config = config;
         this.textViewWeakReference = new WeakReference<>(textView);
-        if (config.richType == RichType.markdown) {
-            spannedParser = new Markdown2SpannedParser(textView);
-        } else {
-            spannedParser = new Html2SpannedParser(new HtmlTagHandler(textView));
-        }
+        spannedParser = new Html2SpannedParser();
         if (config.clickable > 0) {
             textView.setMovementMethod(new LongClickableLinkMovementMethod());
         } else if (config.clickable == 0) {
@@ -139,19 +92,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
     }
 
     public static RichTextConfig.RichTextConfigBuild from(String source) {
-        return fromHtml(source);
-    }
-
-    public static RichTextConfig.RichTextConfigBuild fromHtml(String source) {
-        return from(source, RichType.html);
-    }
-
-    public static RichTextConfig.RichTextConfigBuild fromMarkdown(String source) {
-        return from(source, RichType.markdown);
-    }
-
-    public static RichTextConfig.RichTextConfigBuild from(String source, RichType richType) {
-        return new RichTextConfig.RichTextConfigBuild(source, richType);
+        return new RichTextConfig.RichTextConfigBuild(source);
     }
 
     void generateAndSet() {
@@ -181,11 +122,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
         if (textView == null) {
             return null;
         }
-        if (config.richType != RichType.markdown) {
-            analyzeImages(config.source);
-        } else {
-            imageHolderMap = new HashMap<>();
-        }
+        analyzeImages(config.source);
         state = RichState.loading;
         SpannableStringBuilder spannableStringBuilder = null;
         if (config.cacheType.intValue() > CacheType.none.intValue()) {
@@ -330,7 +267,6 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
         if (textView != null) {
             textView.setText(null);
         }
-        config.imageGetter.recycle();
     }
 
 
@@ -361,16 +297,10 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
         if (!ContextKit.activityIsAlive(textView.getContext())) {
             return null;
         }
-        ImageHolder holder;
-        if (config.richType == RichType.markdown) {
+        ImageHolder holder = imageHolderMap.get(source);
+        if (holder == null) {
             holder = new ImageHolder(source, loadingCount - 1, config, textView);
             imageHolderMap.put(source, holder);
-        } else {
-            holder = imageHolderMap.get(source);
-            if (holder == null) {
-                holder = new ImageHolder(source, loadingCount - 1, config, textView);
-                imageHolderMap.put(source, holder);
-            }
         }
         holder.setImageState(ImageHolder.ImageState.INIT);
         if (config.imageFixCallback != null) {
@@ -379,7 +309,7 @@ public class RichText implements ImageGetterWrapper, ImageLoadNotify {
                 return null;
             }
         }
-        return config.imageGetter.getDrawable(holder, config, textView);
+        return config.imageGetter.getDrawable(holder, config,textView);
     }
 
     @Override
